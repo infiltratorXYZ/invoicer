@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # custom
-    "invoice_creator.apps.InvoiceCreatorConfig",
+    "core",
     # 3rd party
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
