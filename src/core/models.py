@@ -19,7 +19,9 @@ class Invoice(models.Model):
         max_length=5, help_text="Currency for the invoice"
     )
 
-    items = models.ManyToManyField("Item")
+    items = models.ManyToManyField(
+        "Item", related_name="entries", through="InvoiceEntry"
+    )
 
     class Meta:
         unique_together = [
@@ -29,14 +31,27 @@ class Invoice(models.Model):
         ]
 
 
+class InvoiceEntry(models.Model):
+    item = models.ForeignKey("Item", on_delete=models.CASCADE)
+    invoice = models.ForeignKey("Invoice", on_delete=models.CASCADE)
+    quantity = models.IntegerField("number of items")
+    overwritte_price = models.DecimalField(
+        blank=True,
+        null=True,
+        max_digits=10,
+        decimal_places=2,
+        help_text="Custom item price",
+    )
+
+
 class Item(models.Model):
     owner = models.ForeignKey(
         "auth.User", related_name="items", on_delete=models.CASCADE
     )
     id = models.AutoField(primary_key=True, unique=True, help_text="Item id")
     name = models.CharField("Product name", max_length=100)
-    rate = models.DecimalField(
-        max_digits=10, decimal_places=2, help_text="Item price - unit cost"
+    unit_price = models.DecimalField(
+        default=0, max_digits=10, decimal_places=2, help_text="Item price"
     )
 
     class Meta:

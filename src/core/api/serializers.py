@@ -2,7 +2,7 @@
 
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from core.models import Invoice, Item
+from core.models import Invoice, InvoiceEntry, Item
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -13,9 +13,19 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class InvoiceEntrySerializer(serializers.ModelSerializer):
+    item = ItemSerializer()
+
+    class Meta:
+        model = InvoiceEntry
+        fields = "__all__"
+
+
 class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
-    items = ItemSerializer(many=True)
+
+    # NOTE: related_name doesn't work :/, instead use <model_name>_set
+    items = InvoiceEntrySerializer(many=True, source="invoiceentry_set")
 
     class Meta:
         model = Invoice
