@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Invoice, Item, InvoiceEntry
+from .models import Invoice, Item, InvoiceEntry, InvoiceRecipient, CompanyDetails
 
 
 class InvoiceEntries_inline(admin.TabularInline):
@@ -13,3 +13,5 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(Item)
+admin.site.register(InvoiceRecipient)
+admin.site.register(CompanyDetails)
